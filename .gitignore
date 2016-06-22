@@ -4,3 +4,4 @@ gen
 .gitignore
 node_modules/
 dist/
+.log
