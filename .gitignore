@@ -1,7 +1,0 @@
-.idea
-out
-gen
-.gitignore
-node_modules/
-dist/
-.log
