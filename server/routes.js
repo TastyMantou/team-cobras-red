@@ -8,12 +8,12 @@ module.exports = function (app, passport) {
     /******************************normal routes***************************************/
     // home page
     app.get('/', function (req, res) {
-    	res.sendFile(path.join(__dirname + '/index.html'))
+    	res.sendFile('index.html', { root: './../' })
     });
 
     // account data
     app.get('/account', isLoggedIn, function (req, res) {
-        // get account data
+        // get account data from db
     });
 
     // tasks data
