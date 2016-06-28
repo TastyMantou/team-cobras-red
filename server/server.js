@@ -32,12 +32,14 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use for flash messages stored in session
 
-// serve index file
-app.use(express.static(__dirname +'/public'));
-
 
 // load routes and pass in app and configured passport
 require('./routes')(app, passport);
+
+app.all('*', function (err, req, res, next) {
+    res.json({message: 'Error with the server.'})
+})
+
 
 // create server object
 let server = http.createServer(app);

@@ -1,10 +1,14 @@
 'use strict';
 
+const path = require('path')
+let db = require('./db')
+
 module.exports = function (app, passport) {
 
     /******************************normal routes***************************************/
     // home page
     app.get('/', function (req, res) {
+    	res.sendFile(path.join(__dirname + '/index.html'))
     });
 
     // account data
@@ -20,7 +24,7 @@ module.exports = function (app, passport) {
     // logout data
     app.get('/logout', function (req, res) {
         req.logout();
-        res.send({message: 'User logged out.'})
+        return res.send({ message: 'User logged out.'} )
     });
 
 
@@ -29,34 +33,45 @@ module.exports = function (app, passport) {
 
 
 
-
-
-
-    /*******************************local authentication****************************/
-
     // process a login
-    app.post('/login', passport.authenticate('local-login', { failureFlash: true }), function (req, res, next) {
-        // req.user contains authenticated user
-        // if this cb called then auth successful
-        // need to send data to frontend
-    });
+    app.post('/login', function(req, res, next) {
+    	passport.authenticate('local-login', function (err, user, info) {
+    		if (err) return next(err)
 
-    /******process a sign up*****/
-    app.post('/signup', passport.authenticate('local-signup', { failureFlash: true }), function (req, res, next) {
-        // same as above but for signup
-    });
+	    	if (!user) return res.send(info)
+
+			req.logIn(user, function(err) {
+	    		if (err) return next(err)
+	    		// need to send email and all tasks for logged in user - same as gettasks route but with user email too
+	    		return res.send(req.user.email)
+	    	})
+		})(req, res, next)
+	})
+
+
+    // process a sign up
+    app.post('/signup', function(req, res, next) {
+    	passport.authenticate('local-signup', function (err, user, info) {
+    		if (err) return next(err)
+
+	    	if (!user) return res.send(info)
+
+	    	req.logIn(user, function(err) {
+	    		if (err) return next(err)
+
+	    		return res.send(req.user.email)
+	    	})
+		})(req, res, next)
+	})
 };
 
 
 
 
 
-
-
-/********** check to see if user is authenticated for profile access***********/
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         return next()
     } // if authenticated then go to next middleware
-    res.send({message: 'user not logged in. Please login'}); // if not authenticated then redirect to home page
+    res.json( {message: 'user not logged in. Please login'} ); // if not authenticated then redirect to home page
 }
