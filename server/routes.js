@@ -5,17 +5,6 @@ module.exports = function (app, passport) {
     /******************************normal routes***************************************/
     // home page
     app.get('/', function (req, res) {
-        res.render('login.ejs', { message: req.flash('message') })
-    });
-
-    // sign data
-    app.get('/signup', function (req, res) {
-        res.render('signup.ejs', { message: req.flash('message') })
-    });
-
-    // login data
-    app.get('/login', function (req, res) {
-        res.render('login.ejs', { message: req.flash('message') })
     });
 
     // account data
