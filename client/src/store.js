@@ -1,9 +1,14 @@
 const store = {
     state: {
         authenticated: true,
-        tasks: [
-            { name: 'task 2' },
-            { name: 'task 2' }
+        selectedTodo: null,
+        todos: [
+            {
+                id: 0, description: 'todo 1', severity: 'low'
+            },
+            {
+                id: 1, description: 'todo 2', severity: 'low'
+            }
         ]
     },
     login: function (email, password) {

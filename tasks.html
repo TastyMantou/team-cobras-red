@@ -17,7 +17,7 @@
                 text-decoration: underline;
             }
 
-            .todo-list__actions {
+            .todo-list__actions-container {
                 display: flex;
                 justify-content: space-between;
                 color: #E4E4E4;
@@ -100,7 +100,7 @@
                                 </div>
                             </li>
                         </ul>
-                        <div class="todo-list__actions">
+                        <div class="todo-list__actions-container">
                             <div v-if="selectedTodo" class="todo-list__action todo-list__action--cancel" v-on:click="cancelTodo"><i class="ion ion-android-cancel"></i> Cancel</div>
                             <div v-if="selectedTodo && !selectedTodo.completed" class="todo-list__action todo-list__action--save" v-on:click="saveTodo"><i class="ion ion-checkmark"></i> Save</div>
                             <div v-if="!selectedTodo" class="todo-list__action todo-list__action--add" v-on:click="addTodo"><i class="ion ion-plus"></i> Add New Todo</div>

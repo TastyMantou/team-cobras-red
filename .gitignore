@@ -2,3 +2,4 @@
 node_modules/
 reddittasker.db
 server/node_modules/
+client/node_modules/

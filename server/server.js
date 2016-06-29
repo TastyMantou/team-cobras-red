@@ -1,7 +1,6 @@
 'use strict';
 
 let express = require('express'),
-    mongoose = require('mongoose'),
     passport = require('passport'),
     flash = require('connect-flash'),
     http = require('http'),
@@ -16,14 +15,14 @@ const port = process.env.PORT || 8080;
 require('./passport')(passport); // pass passport object to auth functions
 
 app.use(cookieParser()); // cookies for auth
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(session({
-    name:              'redditTaskSessions',
-    secret:            'fghtr@#$fh56SD234Fdvf',
-    resave:            true,
+    name: 'redditTaskSessions',
+    secret: 'fghtr@#$fh56SD234Fdvf',
+    resave: true,
     saveUninitialized: true,
-    cookie:            {
+    cookie: {
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
     }
 }));
@@ -59,10 +58,10 @@ if (require.main === module) {
     boot()
 } else {
     module.exports = {
-        boot:     boot,
+        boot: boot,
         shutdown: shutdown,
-        port:     port,
-        server:   server,
-        app:      app
+        port: port,
+        server: server,
+        app: app
     }
 }
