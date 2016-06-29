@@ -1,0 +1,4 @@
+.idea
+node_modules/
+reddittasker.db
+server/node_modules/

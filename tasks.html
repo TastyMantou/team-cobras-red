@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+        <style type="text/css">
+            .todo-list {
+                display: flex;
+                padding: 0;
+                justify-content: center;
+                flex-direction: column;
+            }
+
+            .todo {
+                display: flex;
+                justify-content: space-between;
+                list-style: none;
+                padding: 5px;
+                background-color: teal;
+            }
+
+            .todo--active {
+                background-color: #3cb3ae;
+            }
+
+            .todo__edit-options {
+                display: none;
+            }
+
+            .todo__edit-options--active {
+                display: inline;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-3">
+                    <div class="text-center">
+                        <h2>Local</h2>
+                        <a href="/profile" class="btn btn-default btn-lg">Profile</a>
+                        <a href="/logout" class="btn btn-default btn-lg">Logout</a>
+                    </div>
+                    <div id="mount">
+                        <h2><u>Todo List</u></h2>
+                        <ul class="todo-list">
+                            <li v-bind:class="['todo', {'todo--active': todo.selected}]" v-for="todo in todos" v-on:click.self="toggleTodo(todo)">{{todo.description}}
+                                <div v-bind:class="['todo__edit-options', {'todo__edit-options--active': todo.selected}]">
+                                    <select>
+                                        <option v-for="option in severityOptions" v-bind:selected="option===todo.severity">{{option}}</option>
+                                    </select>
+                                    <span>T</span>
+                                    <span>C</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            new Vue({
+                el:      '#mount',
+                data:    {
+                    todos:           [
+                        {
+                            description: 'todo1', severity: 'magic', selected: false
+                        },
+                        {
+                            description: 'todo2', severity: 'low', selected: false
+                        },
+                        {
+                            description: 'todo3', severity: 'low', selected: false
+                        },
+                        {
+                            description: 'todo4', severity: 'high', selected: false
+                        },
+                        {
+                            description: 'todo5', severity: 'low', selected: false
+                        },
+                        {
+                            description: 'todo6', severity: 'magic', selected: false
+                        },
+                        {
+                            description: 'todo7', severity: 'low', selected: false
+                        }
+                    ],
+                    severityOptions: [
+                        'low',
+                        'high',
+                        'magic'
+                    ]
+                },
+                methods: {
+                    toggleTodo: function (todo) {
+                        this.todos = this.todos.map(function (item) {
+                            return Object.assign({}, item, {
+                                selected: item === todo ? !item.selected : false
+                            })
+                        });
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
