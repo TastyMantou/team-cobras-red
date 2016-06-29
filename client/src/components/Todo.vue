@@ -1,15 +1,16 @@
 <template>
     <div>
         <li v-bind:class="['todo', {'todo--active': selectedTodo && todo.id === selectedTodo.id}, {'todo--completed': todo.completed}]" @click.self="selectTodo(todo)">
-            <input v-if="selectedTodo && selectedTodo.editing && selectedTodo.id === todo.id" v-model="todo.description" placeholder="*todo.description"/>
-            <span v-on:click.self="editTodoText(todo)">{{todo.description}}</span>
+            <input v-if="selectedTodo && selectedTodo.editing && selectedTodo.id === todo.id" v-model="editedTodo.description" placeholder="todo.description"/>
+            <span v-on:click.self="editTodoText(todo)">{{*todo.description}}</span>
             <div v-bind:class="['todo__edit-options', {'todo__edit-options--active': selectedTodo && todo.id === selectedTodo.id}]">
-                <select v-model="todo.severity" v-if="!todo.completed">
+                <select v-if="editedTodo" v-model="editedTodo.severity" v-if="!todo.completed">
                     <option v-for="option in severityOptions" v-bind:selected="option===todo.severity">{{option}}</option>
                 </select>
                 <span v-if="todo.completed">{{todo.severity}}</span>
-                <i class="ion-trash-b todo-list__action todo-list__action--delete" v-on:click.self="deleteTodo"></i>
-                <i class="ion-android-done-all todo-list__action todo-list__action--complete" v-on:click.self="completeTodo" v-if="selectedTodo && !selectedTodo.completed"></i>
+                <i class="ion-trash-b todo-list__action todo-list__action--delete" @click.self="deleteTodo"></i>
+                <i v-if="selectedTodo && !selectedTodo.completed" class="ion ion-android-mail todo-list__action todo-list__action--save" @click.self="saveTodo"></i>
+                <i class="ion-android-done-all todo-list__action todo-list__action--complete" @click.self="completeTodo" v-if="!todo.completed"></i>
             </div>
         </li>
     </div>
@@ -27,7 +28,8 @@
                     'low',
                     'moderate',
                     'high'
-                ]
+                ],
+                editedTodo: null
             }
         },
         methods: {
@@ -41,7 +43,13 @@
                     return this.selectedTodo
                 }
             },
+            saveTodo: function () {
+                this.todo = this.editedTodo
+                this.selectTodo()
+                return this.todo
+            },
             selectTodo: function (todo) {
+                this.editedTodo = (this.editedTodo === todo) ? null : todo
                 return this.$parent.selectTodo(todo)
             },
             deleteTodo: function () {
@@ -62,30 +70,20 @@
     }
 
     .todo-list__action {
-        width: 100%;
         padding: 5px;
-    }
-
-    .todo-list__action--add {
-        background-color: #006600;
-        text-align: center;
+        color: white;
     }
 
     .todo-list__action--delete {
-        color: white;
+
     }
 
     .todo-list__action--complete {
-        color: white;
+
     }
 
     .todo-list__action--save {
-        background-color: #000066;
-        text-align: right;
-    }
 
-    .todo-list__action--cancel {
-        background-color: #943724;
     }
 
     .todo {

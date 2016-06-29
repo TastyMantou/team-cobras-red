@@ -7,7 +7,7 @@ const store = {
                 id: 0, description: 'todo 1', severity: 'low'
             },
             {
-                id: 1, description: 'todo 2', severity: 'low'
+                id: 1, description: 'todo 2', severity: 'high'
             }
         ]
     },

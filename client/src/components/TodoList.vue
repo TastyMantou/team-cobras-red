@@ -5,9 +5,8 @@
             <todo v-for="todo in todos" :todo="todo" :selected-todo="selectedTodo" v-on:click.self="selectTodo(todo)"></todo>
         </ul>
         <div class="todo-list__actions-container">
-            <div v-if="selectedTodo" class="todo-list__action todo-list__action--cancel" @click="cancelTodo"><i class="ion ion-android-cancel"></i> Cancel</div>
-            <div v-if="selectedTodo && !selectedTodo.completed" class="todo-list__action todo-list__action--save" @click="saveTodo"><i class="ion ion-checkmark"></i> Save</div>
-            <div v-if="!selectedTodo" class="todo-list__action todo-list__action--add" @click="addTodo"><i class="ion ion-plus"></i> Add New Todo</div>
+            <div v-if="selectedTodo" class="todo-list__todo-list__container todo-list__todo-list__container-action--cancel" @click="cancelTodo"><i class="ion ion-android-cancel"></i> Cancel</div>
+            <div v-if="!selectedTodo" class="todo-list__todo-list__container todo-list__todo-list__container-action--add" @click="addTodo"><i class="ion ion-plus"></i> Add New Todo</div>
         </div>
     </div>
 </template>
@@ -44,13 +43,6 @@
             cancelTodo: function () {
                 return this.selectTodo()
             },
-            saveTodo: function () {
-                let index = this.todos.findIndex((todo) => todo.id === this.selectedTodo.id)
-
-                this.todos[index] = this.selectedTodo
-                this.selectTodo()
-                return this.todos
-            },
             deleteTodo: function () {
                 this.todos = this.todos.filter((todo) => todo !== this.selectedTodo)
                 this.selectTodo()
@@ -76,6 +68,20 @@
 <style>
     .todo-list__container {
 
+    }
+
+    .todo-list__todo-list__container {
+        width: 100%;
+        padding: 5px;
+    }
+
+    .todo-list__todo-list__container-action--cancel {
+        background-color: #943724;
+    }
+
+    .todo-list__todo-list__container-action--add {
+        background-color: #006600;
+        text-align: center;
     }
 
     .todo-list {
