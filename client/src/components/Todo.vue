@@ -1,6 +1,6 @@
 <template>
     <div>
-        <li v-bind:class="['todo', {'todo--active': selectedTodo && todo.id === selectedTodo.id}, {'todo--completed': todo.completed}]">
+        <li v-bind:class="['todo', {'todo--active': selectedTodo && todo.id === selectedTodo.id}, {'todo--completed': todo.completed}]" @click.self="selectTodo(todo)">
             <input v-if="selectedTodo && selectedTodo.editing && selectedTodo.id === todo.id" v-model="todo.description" placeholder="*todo.description"/>
             <span v-on:click.self="editTodoText(todo)">{{todo.description}}</span>
             <div v-bind:class="['todo__edit-options', {'todo__edit-options--active': selectedTodo && todo.id === selectedTodo.id}]">
@@ -40,6 +40,9 @@
                     this.selectedTodo = Object.assign({}, selectedTodo, {editing: !selectedTodo.editing})
                     return this.selectedTodo
                 }
+            },
+            selectTodo: function (todo) {
+                return this.$parent.selectTodo(todo)
             },
             deleteTodo: function () {
                 return this.$parent.deleteTodo()

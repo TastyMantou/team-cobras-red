@@ -53,6 +53,7 @@
             },
             deleteTodo: function () {
                 this.todos = this.todos.filter((todo) => todo !== this.selectedTodo)
+                this.selectTodo()
                 return this.todos
             },
             completeTodo: function () {
@@ -60,6 +61,7 @@
                 let index = todos.findIndex((todo) => todo.id === this.selectedTodo.id)
 
                 todos[index] = Object.assign({}, this.selectedTodo, {completed: true})
+                this.todos = []
                 this.todos = todos
                 this.selectTodo()
                 return this.todos
