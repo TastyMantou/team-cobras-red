@@ -37,6 +37,10 @@
                 color: white;
             }
 
+            .todo-list__action--complete {
+                color: white;
+            }
+
             .todo-list__action--save {
                 background-color: #000066;
                 text-align: right;
@@ -56,6 +60,10 @@
 
             .todo--active {
                 background-color: #3CB3AE;
+            }
+
+            .todo--completed {
+                text-decoration: line-through;
             }
 
             .todo__edit-options {
@@ -79,21 +87,23 @@
                     <div id="mount">
                         <h2 class="todo-list__title">Todo List</h2>
                         <ul class="todo-list">
-                            <li v-bind:class="['todo', {'todo--active': selectedTodo && todo.id === selectedTodo.id}]" v-for="todo in todos" v-on:click.self="selectTodo(todo)">
+                            <li v-bind:class="['todo', {'todo--active': selectedTodo && todo.id === selectedTodo.id}, {'todo--completed': todo.completed}]" v-for="todo in todos" v-on:click.self="selectTodo(todo)">
                                 <input v-if="selectedTodo && selectedTodo.editing && selectedTodo.id === todo.id" v-model="selectedTodo.description" placeholder="todo.description"/>
                                 <span v-on:click.self="editTodoText(todo)">{{todo.description}}</span>
                                 <div v-bind:class="['todo__edit-options', {'todo__edit-options--active': selectedTodo && todo.id === selectedTodo.id}]">
-                                    <select v-model="todo.severity">
+                                    <select v-model="todo.severity" v-if="!todo.completed">
                                         <option v-for="option in severityOptions" v-bind:selected="option===todo.severity">{{option}}</option>
                                     </select>
+                                    <span v-if="todo.completed">{{todo.severity}}</span>
                                     <i class="ion-trash-b todo-list__action todo-list__action--delete" v-on:click.self="deleteTodo"></i>
+                                    <i class="ion-android-done-all todo-list__action todo-list__action--complete" v-on:click.self="completeTodo" v-if="selectedTodo && !selectedTodo.completed"></i>
                                 </div>
                             </li>
                         </ul>
                         <div class="todo-list__actions">
-                            <div v-if="itemSelected" class="todo-list__action todo-list__action--cancel" v-on:click="cancelTodo"><i class="ion ion-android-cancel"></i> Cancel</div>
-                            <div v-if="itemSelected" class="todo-list__action todo-list__action--save" v-on:click="saveTodo"><i class="ion ion-checkmark"></i> Save</div>
-                            <div v-if="!itemSelected" class="todo-list__action todo-list__action--add" v-on:click="addTodo"><i class="ion ion-plus"></i> Add New Todo</div>
+                            <div v-if="selectedTodo" class="todo-list__action todo-list__action--cancel" v-on:click="cancelTodo"><i class="ion ion-android-cancel"></i> Cancel</div>
+                            <div v-if="selectedTodo && !selectedTodo.completed" class="todo-list__action todo-list__action--save" v-on:click="saveTodo"><i class="ion ion-checkmark"></i> Save</div>
+                            <div v-if="!selectedTodo" class="todo-list__action todo-list__action--add" v-on:click="addTodo"><i class="ion ion-plus"></i> Add New Todo</div>
                         </div>
                     </div>
                 </div>
@@ -108,29 +118,42 @@
             }
 
             new Vue({
-                el:       '#mount',
-                data:     {
+                el:      '#mount',
+                data:    {
                     selectedTodo:    null,
-                    todos:           [],
+                    todos:           [
+                        {
+                            id: randomGuid(), description: 'todo1', severity: 'low'
+                        }
+                    ],
                     severityOptions: [
                         'low',
-                        'high',
-                        'magic'
+                        'moderate',
+                        'high'
                     ]
                 },
-                methods:  {
+                methods: {
                     selectTodo:   function (todo) {
                         return this.selectedTodo = (this.selectedTodo === todo) ? null : todo;
                     },
                     editTodoText: function (todo) {
-                        if (!this.selectedTodo || this.selectedTodo.id !== todo.id) {
-                            this.selectTodo(todo);
-                        }
+                        if (!todo.completed) {
+                            if (!this.selectedTodo || this.selectedTodo.id !== todo.id) {
+                                this.selectTodo(todo);
+                            }
 
-                        return this.selectedTodo = Object.assign({}, this.selectedTodo, {editing: !this.selectedTodo.editing});
+                            return this.selectedTodo = Object.assign({}, this.selectedTodo, {editing: !this.selectedTodo.editing});
+                        }
                     },
                     deleteTodo:   function () {
                         return this.todos = this.todos.filter((todo) => todo !== this.selectedTodo);
+                    },
+                    completeTodo: function () {
+                        let index = this.todos.findIndex((todo) => todo.id === this.selectedTodo.id);
+
+                        this.todos[index] = Object.assign({}, this.selectedTodo, {completed: true});
+                        this.selectTodo();
+                        return this.todos;
                     },
                     addTodo:      function () {
                         let todo = {id: randomGuid(), description: 'New Todo', severity: 'low'};
@@ -146,11 +169,6 @@
                         this.todos[index] = this.selectedTodo;
                         this.selectTodo();
                         return this.todos;
-                    }
-                },
-                computed: {
-                    itemSelected: function () {
-                        return this.selectedTodo && this.selectedTodo.hasOwnProperty('id');
                     }
                 }
             })
