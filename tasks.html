@@ -1,14 +1,45 @@
 <!doctype html>
-<html>
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
         <style type="text/css">
             .todo-list {
                 display: flex;
                 padding: 0;
+                margin: 0;
                 justify-content: center;
                 flex-direction: column;
+            }
+
+            .todo-list__title {
+                text-decoration: underline;
+            }
+
+            .todo-list__actions {
+                display: flex;
+                justify-content: space-between;
+                color: #E4E4E4;
+            }
+
+            .todo-list__action {
+                width: 100%;
+                padding: 5px;
+            }
+
+            .todo-list__action--add {
+                background-color: #006600;
+                text-align: center;
+            }
+
+            .todo-list__action--save {
+                background-color: #000066;
+                text-align: right;
+            }
+
+            .todo-list__action--cancel {
+                background-color: #943724;
             }
 
             .todo {
@@ -20,7 +51,7 @@
             }
 
             .todo--active {
-                background-color: #3cb3ae;
+                background-color: #3CB3AE;
             }
 
             .todo__edit-options {
@@ -42,26 +73,30 @@
                         <a href="/logout" class="btn btn-default btn-lg">Logout</a>
                     </div>
                     <div id="mount">
-                        <h2><u>Todo List</u></h2>
+                        <h2 class="todo-list__title"><u>Todo List</u></h2>
                         <ul class="todo-list">
                             <li v-bind:class="['todo', {'todo--active': todo.selected}]" v-for="todo in todos" v-on:click.self="toggleTodo(todo)">{{todo.description}}
                                 <div v-bind:class="['todo__edit-options', {'todo__edit-options--active': todo.selected}]">
                                     <select>
                                         <option v-for="option in severityOptions" v-bind:selected="option===todo.severity">{{option}}</option>
                                     </select>
-                                    <span>T</span>
-                                    <span>C</span>
+                                    <i class="ion-trash-b" v-on:click.self="deleteTodo(todo)"></i>
                                 </div>
                             </li>
                         </ul>
+                        <div class="todo-list__actions">
+                            <div v-if="itemSelected" class="todo-list__action todo-list__action--cancel"><i class="ion ion-android-cancel"></i> Cancel</div>
+                            <div v-if="itemSelected" class="todo-list__action todo-list__action--save"><i class="ion ion-checkmark"></i> Save</div>
+                            <div v-if="!itemSelected" class="todo-list__action todo-list__action--add"><i class="ion ion-plus"></i> Add New Todo</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <script>
             new Vue({
-                el:      '#mount',
-                data:    {
+                el:       '#mount',
+                data:     {
                     todos:           [
                         {
                             description: 'todo1', severity: 'magic', selected: false
@@ -91,13 +126,20 @@
                         'magic'
                     ]
                 },
-                methods: {
+                methods:  {
                     toggleTodo: function (todo) {
-                        this.todos = this.todos.map(function (item) {
-                            return Object.assign({}, item, {
-                                selected: item === todo ? !item.selected : false
-                            })
-                        });
+                        this.todos = this.todos.map((item) => Object.assign({}, item, {
+                                    selected: item === todo ? !item.selected : false
+                                })
+                        );
+                    },
+                    deleteTodo: function (todo) {
+                        return this.todos = this.todos.filter((item) => todo !== item);
+                    }
+                },
+                computed: {
+                    itemSelected: function () {
+                        return this.todos.filter((todo) => todo.selected).length > 0;
                     }
                 }
             })
