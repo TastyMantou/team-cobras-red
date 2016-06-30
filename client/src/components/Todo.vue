@@ -1,5 +1,5 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
-    <li v-bind:class="['todo', {'todo--active': todo.selected}, {'todo--completed': todo.completed}]" @click.self="toggleTodo()">
+    <li v-bind:class="['todo', {'todo--active': todo.selected}, {'todo--deleted': todo.deleted}, {'todo--completed': todo.completed}]" @click.self="toggleTodo()">
         <input v-if="todo.editing" v-model="editedTodo.description" placeholder="todo.description"/>
         <span v-on:click.self="editTodoText">{{todo.description}}</span>
         <div v-bind:class="['todo__edit-options', {'todo__edit-options--active': todo.selected}]">
@@ -100,6 +100,11 @@
 
     .todo--active {
         background-color: #3CB3AE;
+    }
+
+    .todo--deleted {
+        display: none;
+        visibility: hidden;
     }
 
     .todo--completed {
