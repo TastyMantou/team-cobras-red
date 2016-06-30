@@ -133,13 +133,13 @@
                     ]
                 },
                 methods: {
-                    selectTodo:   function (todo) {
+                    toggleTodo:   function (todo) {
                         return this.selectedTodo = (this.selectedTodo === todo) ? null : todo;
                     },
                     editTodoText: function (todo) {
                         if (!todo.completed) {
                             if (!this.selectedTodo || this.selectedTodo.id !== todo.id) {
-                                this.selectTodo(todo);
+                                this.toggleTodo(todo);
                             }
 
                             return this.selectedTodo = Object.assign({}, this.selectedTodo, {editing: !this.selectedTodo.editing});
@@ -152,22 +152,22 @@
                         let index = this.todos.findIndex((todo) => todo.id === this.selectedTodo.id);
 
                         this.todos[index] = Object.assign({}, this.selectedTodo, {completed: true});
-                        this.selectTodo();
+                        this.toggleTodo();
                         return this.todos;
                     },
                     addTodo:      function () {
                         let todo = {id: randomGuid(), description: 'New Todo', severity: 'low'};
                         this.todos.push(todo);
-                        return this.selectTodo();
+                        return this.toggleTodo();
                     },
                     cancelTodo:   function () {
-                        return this.selectTodo();
+                        return this.toggleTodo();
                     },
                     saveTodo:     function () {
                         let index = this.todos.findIndex((todo) => todo.id === this.selectedTodo.id);
 
                         this.todos[index] = this.selectedTodo;
-                        this.selectTodo();
+                        this.toggleTodo();
                         return this.todos;
                     }
                 }

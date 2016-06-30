@@ -1,0 +1,20 @@
+            /*            saveTodo:     function () {
+                           this.todo = this.selectedTodo
+                           this.toggleTodo()
+                           return this.todo
+                       },*/
+            /*           */
+                        ,
+                                    completeTodo: function () {
+                                        let todos = this.todos
+                                        let index = todos.findIndex((todo) => todo.id === this.selectedTodo.id)
+
+                                        todos[index] = Object.assign({}, this.selectedTodo, { completed: true })
+                                        this.todos = []
+                                        this.todos = todos
+                                        this.toggleTodo()
+                                        return this.todos
+                                    }
+
+
+                                                    <i v-if="todo.selected && !todo.completed" class="ion ion-android-mail todo-list__action todo-list__action--save" @click.self="saveTodo"></i>

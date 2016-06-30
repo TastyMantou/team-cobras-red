@@ -4,10 +4,10 @@ const store = {
         selectedTodo: null,
         todos: [
             {
-                id: 0, description: 'todo 1', severity: 'low'
+                id: 0, description: 'todo 1', severity: 'low', selected: false, editing: false, completed: false
             },
             {
-                id: 1, description: 'todo 2', severity: 'high'
+                id: 1, description: 'todo 2', severity: 'high', selected: false, editing: false, completed: false
             }
         ]
     },
