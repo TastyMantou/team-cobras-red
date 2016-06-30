@@ -9,7 +9,7 @@
             <span v-if="todo.completed">{{todo.severity}}</span>
             <i class="ion ion-android-cancel todo-list__action todo-list__action--cancel" @click.self="cancelTodo" v-if="!todo.completed"></i>
             <i class="ion ion-trash-b todo-list__action todo-list__action--delete" @click.self="deleteTodo"></i>
-            <i class="ion ion-android-mail todo-list__action todo-list__action--save" @click.self="saveTodo" v-if="todo.selected && !todo.completed"></i>
+            <i class="ion ion-android-mail todo-list__action todo-list__action--save" @click.self="saveTodo" v-if="todo.selected && !todo.completed && todo.editing"></i>
             <i class="ion ion-android-done-all todo-list__action todo-list__action--complete" @click.self="completeTodo" v-if="!todo.completed"></i>
         </div>
     </li>
