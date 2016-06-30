@@ -5,8 +5,8 @@
             <todo v-for="todo in todos" :todo="todo" :selected-todo="selectedTodo" v-on:click.self="selectTodo(todo)"></todo>
         </ul>
         <div class="todo-list__actions-container">
-            <div v-if="selectedTodo" class="todo-list__todo-list__container todo-list__todo-list__container-action--cancel" @click="cancelTodo"><i class="ion ion-android-cancel"></i> Cancel</div>
-            <div v-if="!selectedTodo" class="todo-list__todo-list__container todo-list__todo-list__container-action--add" @click="addTodo"><i class="ion ion-plus"></i> Add New Todo</div>
+            <div v-if="itemSelected" class="todo-list__todo-list__container todo-list__todo-list__container-action--cancel" @click="cancelTodo"><i class="ion ion-android-cancel"></i> Cancel</div>
+            <div v-if="!itemSelected" class="todo-list__todo-list__container todo-list__todo-list__container-action--add" @click="addTodo"><i class="ion ion-plus"></i> Add New Todo</div>
         </div>
     </div>
 </template>
@@ -25,42 +25,31 @@
         components: {
             Todo
         },
-        data: function () {
+        data:       function () {
             return {
                 selectedTodo: null
             }
         },
-        methods: {
-            selectTodo: function (todo) {
-                this.selectedTodo = (this.selectedTodo === todo) ? null : todo
-                return this.selectedTodo
-            },
-            addTodo: function () {
-                let todo = {id: randomGuid(), description: 'New Todo', severity: 'low'}
+        methods:    {
+            addTodo:    function () {
+                let todo = { id: randomGuid(), description: 'New Todo', severity: 'low', selected: false }
                 this.todos.push(todo)
-                return this.selectTodo()
             },
             cancelTodo: function () {
-                return this.selectTodo()
-            },
-            deleteTodo: function () {
-                this.todos = this.todos.filter((todo) => todo !== this.selectedTodo)
-                this.selectTodo()
-                return this.todos
-            },
-            completeTodo: function () {
-                let todos = this.todos
-                let index = todos.findIndex((todo) => todo.id === this.selectedTodo.id)
-
-                todos[index] = Object.assign({}, this.selectedTodo, {completed: true})
-                this.todos = []
-                this.todos = todos
-                this.selectTodo()
+                this.todos = this.todos.map((todo) => {
+                    todo.selected = false;
+                    return todo;
+                })
                 return this.todos
             }
         },
-        props: {
+        props:      {
             todos: Array
+        },
+        computed:   {
+            itemSelected: function () {
+                return this.todos.filter((todo) => todo.selected).length > 0;
+            }
         }
     }
 </script>
