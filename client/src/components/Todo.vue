@@ -1,14 +1,15 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
     <li v-bind:class="['todo', {'todo--active': todo.selected}, {'todo--completed': todo.completed}]" @click.self="toggleTodo()">
-        <input v-if="todo.editing" v-model="todo.description" placeholder="todo.description"/>
-        <span v-on:click.self="editTodoText">{{*todo.description}}</span>
+        <input v-if="todo.editing" v-model="editedTodo.description" placeholder="todo.description"/>
+        <span v-on:click.self="editTodoText">{{todo.description}}</span>
         <div v-bind:class="['todo__edit-options', {'todo__edit-options--active': todo.selected}]">
-            <select v-if="todo.selected && !todo.completed" v-model="todo.severity" v-if="!todo.completed">
+            <select v-if="todo.editing && todo.selected && !todo.completed" v-model="editedTodo.severity">
                 <option v-for="option in severityOptions" v-bind:selected="option===todo.severity">{{option}}</option>
             </select>
             <span v-if="todo.completed">{{todo.severity}}</span>
             <i class="ion ion-android-cancel todo-list__action todo-list__action--cancel" @click.self="cancelTodo" v-if="!todo.completed"></i>
             <i class="ion ion-trash-b todo-list__action todo-list__action--delete" @click.self="deleteTodo"></i>
+            <i class="ion ion-android-mail todo-list__action todo-list__action--save" @click.self="saveTodo" v-if="todo.selected && !todo.completed"></i>
             <i class="ion ion-android-done-all todo-list__action todo-list__action--complete" @click.self="completeTodo" v-if="!todo.completed"></i>
         </div>
     </li>
@@ -25,7 +26,8 @@
                     'low',
                     'moderate',
                     'high'
-                ]
+                ],
+                editedTodo: null
             }
         },
         methods: {
@@ -36,6 +38,8 @@
                 if (this.todo.completed) {
                     return;
                 }
+
+                this.editedTodo = this.todo;
 
                 return this.toggleTodo(true, !this.todo.editing);
             },
@@ -50,6 +54,10 @@
                 this.toggleTodo();
                 return this.todo = Object.assign({}, this.todo, {deleted: true});
             },
+            saveTodo: function () {
+                this.toggleTodo();
+                return [this.todo, this.editedTodo] = [this.editedTodo, null];
+            }
         }
     }
 </script>
