@@ -1,17 +1,17 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
-    <div>
-        <li v-bind:class="['todo', {'todo--active': todo.selected}, {'todo--completed': todo.completed}]" @click.self="toggleTodo(todo)">
-            <input v-if="todo.editing" v-model="todo.description" placeholder="todo.description"/>
-            <span v-on:click.self="editTodoText(todo)">{{*todo.description}}</span>
-            <div v-bind:class="['todo__edit-options', {'todo__edit-options--active': todo.editing}]">
-                <select v-if="todo.selected" v-model="todo.severity" v-if="!todo.completed">
-                    <option v-for="option in severityOptions" v-bind:selected="option===todo.severity">{{option}}</option>
-                </select>
-                <span v-if="todo.completed">{{todo.severity}}</span>
-
-            </div>
-        </li>
-    </div>
+    <li v-bind:class="['todo', {'todo--active': todo.selected}, {'todo--completed': todo.completed}]" @click.self="toggleTodo()">
+        <input v-if="todo.editing" v-model="todo.description" placeholder="todo.description"/>
+        <span v-on:click.self="editTodoText">{{*todo.description}}</span>
+        <div v-bind:class="['todo__edit-options', {'todo__edit-options--active': todo.selected}]">
+            <select v-if="todo.selected && !todo.completed" v-model="todo.severity" v-if="!todo.completed">
+                <option v-for="option in severityOptions" v-bind:selected="option===todo.severity">{{option}}</option>
+            </select>
+            <span v-if="todo.completed">{{todo.severity}}</span>
+            <i class="ion ion-android-cancel todo-list__action todo-list__action--cancel" @click.self="cancelTodo" v-if="!todo.completed"></i>
+            <i class="ion ion-trash-b todo-list__action todo-list__action--delete" @click.self="deleteTodo"></i>
+            <i class="ion ion-android-done-all todo-list__action todo-list__action--complete" @click.self="completeTodo" v-if="!todo.completed"></i>
+        </div>
+    </li>
 </template>
 
 <script>
@@ -25,21 +25,31 @@
                     'low',
                     'moderate',
                     'high'
-                ],
-                selectedTodo:    null
+                ]
             }
         },
         methods: {
-            editTodoText: function (todo) {
-                if (todo.completed) {
+            cancelTodo:   function () {
+                return this.toggleTodo(false, false);
+            },
+            editTodoText: function () {
+                if (this.todo.completed) {
                     return;
                 }
 
-                return this.toggleTodo(todo, true, !todo.editing);
+                return this.toggleTodo(true, !this.todo.editing);
             },
-            toggleTodo:   function (todo, selected = false, editing) {
-                return this.todo = Object.assign({}, todo, { selected: selected || !todo.selected, editing: editing });
-            }
+            toggleTodo:   function (selected, editing = false) {
+                return this.todo = Object.assign({}, this.todo, { selected: selected || !this.todo.selected, editing: editing });
+            },
+            completeTodo: function () {
+                this.toggleTodo();
+                return this.todo = Object.assign({}, this.todo, { selected: false, editing: false, completed: true });
+            },
+            deleteTodo:   function () {
+                this.toggleTodo();
+                return this.todo = Object.assign({}, this.todo, { deleted: true });
+            },
         }
     }
 </script>
@@ -54,6 +64,10 @@
     .todo-list__action {
         padding: 5px;
         color: white;
+    }
+
+    .todo-list__action--cancel {
+        color: red;
     }
 
     .todo-list__action--delete {

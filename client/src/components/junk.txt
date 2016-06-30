@@ -3,11 +3,7 @@
                            this.toggleTodo()
                            return this.todo
                        },*/
-            /*            deleteTodo:   function () {
-                            this.todos = this.todos.filter((todo) => todo !== this.selectedTodo)
-                            this.toggleTodo()
-                            return this.todos
-                        },*/
+            /*           */
                         ,
                                     completeTodo: function () {
                                         let todos = this.todos
@@ -20,6 +16,5 @@
                                         return this.todos
                                     }
 
-                                                    <i class="ion-trash-b todo-list__action todo-list__action--delete" @click.self="deleteTodo"></i>
+
                                                     <i v-if="todo.selected && !todo.completed" class="ion ion-android-mail todo-list__action todo-list__action--save" @click.self="saveTodo"></i>
-                                                    <i class="ion-android-done-all todo-list__action todo-list__action--complete" @click.self="completeTodo" v-if="!todo.completed"></i>
