@@ -12,7 +12,7 @@
                     <div class="row card-body">
                         <div class="col-xs-12">
                             <ul>
-                                todo v-for="todo in todoList" :todo="todo"></todo>
+                                <todo v-for="todo in todoList" :todo="todo"></todo>
                             </ul>
                         </div>
                     </div>
