@@ -1,69 +1,111 @@
 <template>
-    <div class="todo-list__container">
-        <h2 class="todo-list__title">Todo List</h2>
-        <ul class="todo-list">
-            <todo v-for="todo in todos" :todo="todo"></todo>
-        </ul>
-        <div class="todo-list__actions-container">
-            <div v-if="!itemSelected" class="todo-list__todo-list__container todo-list__todo-list__container-action--add" @click="addTodo"><i class="ion ion-plus"></i> Add New Todo</div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-md-6 col-md-offset-3">
+                <div class="card">
+                    <div class="row card-header">
+                        <div class="col-xs-12">
+
+                            <h2 class='text-center'>Todo List</h2>
+                        </div>
+                    </div>
+                    <div class="row card-body">
+                        <div class="col-xs-12">
+                            <ul>
+                                todo v-for="todo in todoList" :todo="todo"></todo>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row card-footer">
+                        <div class="col-xs-12">
+                            <form class="text-center">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder='description'>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control">
+                                        <option>Importance</option>
+                                        <option>low</option>
+                                        <option>medium</option>
+                                        <option>high</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-primary"  v-on:click="addTodo()">Add new item</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    function randomGuid () {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            let r = Math.random() * 16 | 0, v = c === 'x' ? r : r & 0x3 | 0x8;
-
-            return v.toString(16);
-        });
-    }
-
-    import Todo from './Todo'
     export default {
-        components: {
-            Todo
+        data () {
+            return {
+                todoList: [],
+                todo: {
+                    description: '',
+                    done: false,
+                    importance: '',
+                    id: 0,
+                },
+                importance: ['low','medium','high']
+            }
         },
         methods: {
             addTodo: function () {
-                let todo = {id: randomGuid(), description: 'New Todo', severity: 'low', selected: false, editing: false, completed: false, deleted: false};
-                return this.todos.push(todo);
+                // generate id for todo item
+                this.todo.id = this.randomGuid()
+
+                // get description and options importance -------------------
+
+                // store in to array
+                this.todos.push(todo);
+                // update server side
+                this.syncToServer()
+
+                // reset default todo item
+                todo.description = ''
+                todo.done = false
+                todo.importance = ''
+                todo.id = 0
+            },
+            randomGuid: function () {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                    let r = Math.random() * 16 | 0, v = c === 'x' ? r : r & 0x3 | 0x8;
+
+                    return v.toString(16);
+                })
+            },
+            syncToServer: function () {
+                // use vue-resource module to update server side info
+                // send todo item and server saves by id
+                // maybe check to make sure it went okay?
             }
         },
-        props: {
-            todos: Array
+        events: {
+            updateTodoItem () {
+                // create event to catch child event that a todo item has changed using $on()
+                // replace todo item in todoList by id
+                syncToServer()
+            }
         }
     }
 </script>
 
 <style>
-    .todo-list__container {
-
+    .card {
+        border: solid 1px black;
+        margin-top: 100px;
     }
-
-    .todo-list__todo-list__container {
-        width: 100%;
-        padding: 5px;
-    }
-
-    .todo-list__todo-list__container-action--cancel {
-        background-color: #943724;
-    }
-
-    .todo-list__todo-list__container-action--add {
-        background-color: #006600;
-        text-align: center;
-    }
-
-    .todo-list {
-        display: flex;
-        padding: 0;
+    .card-header, .card-footer {
+        background-color: #f1f1f1;
+        padding: 20px;
         margin: 0;
-        justify-content: center;
-        flex-direction: column;
     }
-
-    .todo-list__title {
-        text-decoration: underline;
+    .card-body {
+        padding: 30px 10px 30px 10px;
     }
 </style>

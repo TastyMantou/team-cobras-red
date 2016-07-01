@@ -1,48 +1,68 @@
 <template>
-    <div id="app">
-        <todo-list v-if="authenticated" :todos="todos"></todo-list>
+    <div class='container-fluid'>
+        <div class="row">
+            <div class="col-xs-12">
+                <nav>
+                     <ul>
+                        <li><a v-link="'/home'">Home</a></li>
+                        <span v-show="authenticated">
+                            <li><a v-link="'/todo'">Todo List</a></li>
+                            <li><a v-link="'/account'">Account</a></li>
+                            <li><a>{{ username }}</a></li>
+                        </span>
+                        <span v-show="!authenticated">
+                            <li><a v-link="'/signup'">Signup</a></li>
+                            <li><a v-link="'/login'">Login</a></li>
+                        </span>
+                    </ul>
+                </nav>  
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <router-view ></router-view>
+            </div>
+        </div>
+
         <login v-else></login>
     </div>
 </template>
 
 <script>
-    import Login from './components/Login'
-    import TodoList from './components/TodoList'
-    import Store from './store'
-
     export default {
-        components: {
-            Login,
-            TodoList
-        },
         data () {
-            return Store.state
+            return {
+                authenticated: true,
+                username: 'Testuser'
+            }
         }
     }
 </script>
 
 <style>
-    html {
-        height: 100%;
+    nav {
+        border-bottom: solid 1px black;
+        width: 100%;
+        height: 40px;
     }
-
-    body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
+    nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        float: right;
     }
-
-    #app {
-        color: #2c3e50;
-        margin-top: -100px;
-        width: 600px;
-        font-family: Source Sans Pro, Helvetica, sans-serif;
-        text-align: center;
+    nav li {
+        display: inline-block;
     }
-
-    #app a {
-        color: #42b983;
+    nav a {
+        display: block;
+        padding: 10px 20px 10px 10px;
         text-decoration: none;
+
     }
+    nav span li:last-of-type a{
+        padding-right: 50px;
+    }
+
 </style>

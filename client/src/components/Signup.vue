@@ -2,7 +2,7 @@
    <div class="container">
         <div class="col-sm-6 col-sm-offset-3">
 
-            <h1><span class="fa fa-sign-in"></span> Login</h1>
+            <h1><span class="fa fa-sign-in"></span> Signup</h1>
 
             <!-- if error from server then show here -->
             <div class="alert alert-danger" v-show='serverMessage'> {{ serverMessage }}</div>
@@ -17,8 +17,7 @@
                     <input type="password" class="form-control" name="password">
                 </div>
 
-                <button type="submit" class="btn btn-warning btn-lg" v-on:click="login()">Login</button>
-                <span><a v-link='"/passwordRecover"'>Forgot password?</a></span>
+                <button type="submit" class="btn btn-warning btn-lg" v-on:click="signup()">Signup</button>
             </form>
         </div>
     </div>
@@ -36,12 +35,11 @@ export default {
         }
     },
     methods: {
-        login: function () {
+        signup: function () {
             // stop default event
             // call http vue-resource method to authenticate
             // pass response up to home component - ie username, isauthenticated
             // user router.go to go to user todo list after authentication success
-
         }
     }
 }
