@@ -72,7 +72,7 @@ module.exports = function (app, passport) {
 	//Task Data
 	app.get('/adminView', function (req, res) {
 		//todo limit to login user
-		var sqlStatement = "SELECT * FROM task" + taskSortBy;
+		var sqlStatement = "SELECT * FROM task ORDER BY user_id ASC" ;
 		db.serialize(function () {
 			db.all(sqlStatement, function (err, rows) {
 				if (err) {
