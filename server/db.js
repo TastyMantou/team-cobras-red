@@ -3,7 +3,7 @@
 const fs = require("fs")
 
 // get db file and check to see if it exists
-const file = "reddittasker.db"
+const file = "sqlite/sqlite3"
 const exists = fs.existsSync(file)
 
 // connect to db
@@ -13,7 +13,7 @@ let db = new sqlite3.Database(file)
 // if db file doesnt exist then create user table
 db.serialize(function() {
 	if (!exists) {
-		db.run("CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, email varchar(50) unique, password varchar(100), salt varchar(50))")
+		db.run('CREATE TABLE "task" ("task_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ON CONFLICT ROLLBACK COLLATE RTRIM, "user_id" INTEGER NOT NULL ON CONFLICT ROLLBACK,"priority" INTEGER DEFAULT 1, "task_description" TEXT,"completed" INTEGER DEFAULT 0,"display_order" INTEGER, CONSTRAINT "fk_task_user_1" FOREIGN KEY ("user_id") REFERENCES "user" ("user_id"), CONSTRAINT "TASK_PRIMARY_UN" UNIQUE ("task_id" ASC) ON CONFLICT ROLLBACK); CREATE TABLE "user" ("user_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "username" TEXT NOT NULL,"password" TEXT NOT NULL,"isAdmin" INTEGER NOT NULL DEFAULT 0, CONSTRAINT "USERNAME_UN" UNIQUE ("username" ASC) ON CONFLICT ROLLBACK);')
 	}
 })
 
