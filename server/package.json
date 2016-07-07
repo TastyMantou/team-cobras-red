@@ -16,9 +16,9 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "express-session": "^1.13.0",
-    "mongoose": "^4.5.1",
+    "mongoose": "^4.5.2",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "sqlite": "^2.0.2"
+    "sqlite3": "^3.1.4"
   }
 }

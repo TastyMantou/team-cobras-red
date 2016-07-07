@@ -4,3 +4,8 @@ gen
 node_modules/
 server/node_modules/
 *.log
+node_modules/
+reddittasker.db
+server/node_modules/
+client/node_modules/
+
