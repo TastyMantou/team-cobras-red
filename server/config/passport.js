@@ -21,16 +21,16 @@ module.exports = function (passport) {
     /******************************login login***************************/
     passport.use('local-login', new LocalStrategy({
             // override default fields in passport module
-            usernameField:     'email',
+            usernameField:     'username',
             passwordField:     'password',
             // pass in request from route to check if a user is logged in
             passReqToCallback: true
         },
-        function (req, email, password, done) {
+        function (req, username, password, done) {
             // async for login to be done before db access
             process.nextTick(function () {
-                // find user by email
-                User.findOne({ 'local.email': email }, function (err, user) {
+                // find user by username
+                User.findOne({ 'local.username': username }, function (err, user) {
                     if (err) {
                         return done(err)
                     }
@@ -52,29 +52,29 @@ module.exports = function (passport) {
 
     /************************local sign up***************************************/
     passport.use('local-signup', new LocalStrategy({
-            usernameField:     'email',
+            usernameField:     'username',
             passwordField:     'password',
             passReqToCallback: true
         },
-        function (req, email, password, done) {
+        function (req, username, password, done) {
 
             process.nextTick(function () {
-                // see if email is used already
-                User.findOne({ 'local.email': email }, function (err, existingUser) {
+                // see if username is used already
+                User.findOne({ 'local.username': username }, function (err, existingUser) {
                     // if error stop db connection and return error
                     if (err) {
                         return done(err)
                     }
 
-                    // if email exists then send flash
+                    // if username exists then send flash
                     if (existingUser) {
-                        return done(null, false, req.flash('loginMessage', 'That email is already taken.'));
+                        return done(null, false, req.flash('loginMessage', 'That username is already taken.'));
                     }
 
                     //  if login successful connect to new local account
                     if (req.user) {
                         let user = req.user;
-                        user.local.email = email;
+                        user.local.username = username;
                         user.local.password = user.generateHash(password);
                         user.save(function (err) {
                             if (err) {
@@ -87,7 +87,7 @@ module.exports = function (passport) {
                     else {
                         // create user model
                         let newUser = new User();
-                        newUser.local.email = email;
+                        newUser.local.username = username;
                         newUser.local.password = newUser.generateHash(password);
                         newUser.save(function (err) {
                             if (err) {

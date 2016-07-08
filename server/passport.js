@@ -9,9 +9,9 @@ let db = require('./db')
 
 module.exports = function (passport) {
 
-    // use user email from db and store in cookie session
+    // use user username from db and store in cookie session
     passport.serializeUser(function (user, done) {
-        done(null, user.email)
+        done(null, user.username)
     })
 
     // get user data from db by cookie session
@@ -31,16 +31,16 @@ module.exports = function (passport) {
     /******************************login login***************************/
     passport.use('local-login', new LocalStrategy({
             // override default fields in passport module
-            usernameField:     'email',
+            usernameField:     'username',
             passwordField:     'password',
             // pass in request from route to check if a user is logged in
             passReqToCallback: true
         },
-        function (req, email, password, done) {
+        function (req, username, password, done) {
             // async for login to be done before db access
             process.nextTick(function () {
-                // get user by email check if result exists and correct password
-                db.getUser(email, function (err, user) {
+                // get user by username check if result exists and correct password
+                db.getUser(username, function (err, user) {
                     if (err) return done(err)
                     // if user doesnt exist or wrong password then flash error message
                     if ( !user || !bcrypt.compareSync(password, user.password) ) {
@@ -56,25 +56,26 @@ module.exports = function (passport) {
 
     /************************local sign up***************************************/
     passport.use('local-signup', new LocalStrategy({
-            usernameField:     'email',
+            usernameField:     'username',
             passwordField:     'password',
             passReqToCallback: true
         },
-        function (req, email, password, done) {
+        function (req, username, password, done) {
             process.nextTick(function () {
-                // check to see if user already exists by email
-                db.getUser(email, function (err, user) {
+                // check to see if user already exists by username
+                db.getUser(username, function (err, user) {
+                    console.log("get user");
                     if (err) return done(err)
 
-                    // if user is found in db then return flash that email is already taken
+                    // if user is found in db then return flash that username is already taken
                     if (user) { 
-                        return done(null, false, { message: 'Email is already taken.'} ) 
+                        return done(null, false, { message: 'Username is already taken.'} ) 
                     }
                     // else user doesnt exist and create new user with hashed password
-                    if (email) {
+                    if (username) {
                         // create new user object
                         let user = {}
-                        user.email = email
+                        user.username = username
 
                         // create salted/hashed password
                         let salt = bcrypt.genSaltSync(8)

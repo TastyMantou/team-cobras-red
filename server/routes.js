@@ -48,7 +48,7 @@ module.exports = function (app, passport) {
                     return next(err);
                 }
                 // need to send email and all tasks for logged in user - same as gettasks route but with user email too
-                return res.send(req.user.email);
+                return res.send(req.user.username);
             })
         })(req, res, next);
     });
@@ -78,24 +78,15 @@ module.exports = function (app, passport) {
 	//Task Data
 	app.get('/adminView', function (req, res) {
 		//todo limit to login user
-		var sqlStatement = "SELECT * FROM task ORDER BY user_id ASC" ;
-		db.serialize(function () {
-			db.all(sqlStatement, function (err, rows) {
-				if (err) {
-					res.send(err);
-				} else {
-					res.send(rows);
-				}
+		return db.adminView(req, res);
 
-			});
-		});
 	});
 
 	app.get('/task/:task_id', function (req, res) {
 		var taskId = req.params.task_id;
 		//todo limit to login in user
 		var sqlStatement = "SELECT * FROM task WHERE task.task_id = $taskId" + taskSortBy;
-		db.serialize(function () {
+
 			db.get(sqlStatement, {
 					$taskId: taskId,
 				},
@@ -106,7 +97,7 @@ module.exports = function (app, passport) {
 						res.send(row);
 					}
 				});
-		});
+
 	});
 
 	app.post('/insertTask', function (req, res, next) {
@@ -123,7 +114,7 @@ module.exports = function (app, passport) {
 		var sqlPreparedStatement = "INSERT INTO task(task_id, user_id, priority, task_description, completed, display_order) " +
 			"VALUES ($taskId, $userId, $priority, $task_des, $completed, $display_order)";
 
-		db.serialize(function () {
+
 			db.run(sqlPreparedStatement, {
 					$taskId: taskId,
 					$userId: userId,
@@ -139,7 +130,7 @@ module.exports = function (app, passport) {
 						res.send('Successfully inserted task into database');
 					}
 				});
-		});
+		
 
 	});
 
@@ -157,7 +148,7 @@ module.exports = function (app, passport) {
 			'SET priority = $priority, task_description = $task_des, completed = $completed, display_order = $display_order ' +
 			'WHERE task.task_id = $taskId';
 
-		db.serialize(function () {
+
 			db.run(sqlPreparedStatement, {
 					$taskId: taskId,
 					$priority: priority,
@@ -172,7 +163,7 @@ module.exports = function (app, passport) {
 						res.send('Successfully update task into database');
 					}
 				});
-		});
+	
 
 	});
 
@@ -180,7 +171,7 @@ module.exports = function (app, passport) {
 		var taskId = req.params.task_id;
 		var sqlPreparedStatement = 'DELETE FROM task WHERE task.task_id = $taskId';
 
-		db.serialize(function () {
+
 			db.run(sqlPreparedStatement, {
 					$taskId: taskId,
 				},
@@ -191,7 +182,7 @@ module.exports = function (app, passport) {
 						res.send('Successfully deleted task from the database');
 					}
 				});
-		});
+	
 
 	});
 
